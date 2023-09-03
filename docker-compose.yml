@@ -37,8 +37,8 @@ services:
       - HUB_HOST=selenium-hub
       - MODULE=testng.xml
     volumes:
-      - ./search-result:/usr/share/udemy/test-output
-  
+      - ./output/search-result:/usr/share/udemy/test-output
+
   book-flight-module:
     image: maddysk/selenium-docker
     depends_on:
@@ -49,4 +49,4 @@ services:
       - HUB_HOST=selenium-hub
       - MODULE=book-flight-module.xml
     volumes:
-      - ./book-result:/usr/share/udemy/test-output
+      - ./output/book-result:/usr/share/udemy/test-output
