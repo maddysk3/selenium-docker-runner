@@ -1,9 +1,14 @@
 pipeline{
     agent any
 stages{
+    stage("Pull Latest Image"){
+        steps{
+            sh "docker pull maddysk/selenium-docker"
+        }   
+    }
     stage("Start Grid"){
         steps{
-            sh "docker-compose up -d selenium-hub chrome firefox"
+            sh "docker-compose up -d --scale chrome=5 selenium-hub chrome firefox"
         }   
     }
     stage("Run Test"){
