@@ -1,26 +1,31 @@
-pipeline{
+pipeline {
     agent any
-stages{
-    stage("Pull Latest Image"){
-        steps{
-            sh "docker pull maddysk/selenium-docker"
-        }   
+    stages {
+        stage("Pull Latest Image") {
+            steps {
+                sh "docker pull maddysk/selenium-docker"
+            }
+        }
+        stage("Start Grid") {
+            steps {
+                sh "docker-compose up -d selenium-hub chrome firefox"
+            }
+        }
+        stage("Scale Chrome") {
+            steps {
+                sh "docker-compose up -d --scale chrome=5"
+            }
+        }
+        stage("Run Test") {
+            steps {
+                sh "docker-compose up search-module book-flight-module"
+            }
+        }
     }
-    stage("Start Grid"){
-        steps{
-            sh "docker-compose up -d selenium-hub chrome firefox"
-        }   
+    post {
+        always {
+            archiveArtifacts artifacts: 'output/**'
+            sh "docker-compose down"
+        }
     }
-    stage("Run Test"){
-        steps{
-            sh "docker-compose up search-module book-flight-module"
-        }   
-    }
-}    
-post{
-    always{
-        archiveArtifacts artifacts: 'output/**'
-        sh "docker-compose down"
-    }
-}
 }
