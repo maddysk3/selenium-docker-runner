@@ -1,31 +1,22 @@
 pipeline {
     agent any
     stages {
-        stage("Pull Latest Image") {
-            steps {
-                sh "docker pull maddysk/selenium-docker"
-            }
-        }
         stage("Start Grid") {
             steps {
-                sh "docker-compose up -d selenium-hub chrome firefox"
-            }
-        }
-        stage("Scale Chrome") {
-            steps {
-                sh "docker-compose up -d --scale chrome=5"
+                sh "docker-compose -f grid.yaml up -d"
             }
         }
         stage("Run Test") {
             steps {
-                sh "docker-compose up search-module book-flight-module"
+                sh "docker-compose -f test-suites.yaml up"
             }
         }
     }
     post {
         always {
-            archiveArtifacts artifacts: 'output/**'
-            sh "docker-compose down"
+            sh "docker-compose -f grid.yaml down"
+            sh "docker-compose -f test-suites.yaml down"
+
         }
     }
 }
