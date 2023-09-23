@@ -6,7 +6,7 @@ services:
       - 4444:4444
   chrome:
     image: selenium/node-chrome
-    shm_size: '2g'
+    shm_size: '1g'
     depends_on:
       - hub
     deploy:
@@ -14,7 +14,7 @@ services:
     env_file: .env
   firefox:
     image: selenium/node-firefox
-    shm_size: '2g'
+    shm_size: '1g'
     depends_on:
       - hub
     deploy:
